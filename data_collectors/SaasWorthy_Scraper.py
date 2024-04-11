@@ -62,6 +62,8 @@ class SaasWorthy:
             
             async with session.get(self.url,params=self.params,headers=self.headers) as resp:
                 print(resp.status)
+                if resp.status==503:
+                    return
                 data=await resp.json()                   
                 
                 for j in data.get("products", []):
