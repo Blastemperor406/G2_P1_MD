@@ -6,7 +6,7 @@ from llama_index.core import TreeIndex
 load_dotenv()
 
 def g2_call(name):
-    headers = {'Authorization': 'Token token=7623beff9ca1e3e0479ca27f225244c70fa017fed820b1bb733afa588a1549fb'}
+    headers = {'Authorization': 'Token token='}
     filters = {'filter[name]': name} 
     response = requests.get('https://data.g2.com/api/v1/products',headers=headers,params=filters)
     if response.status_code == 200:
