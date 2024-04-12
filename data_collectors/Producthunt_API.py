@@ -1,5 +1,5 @@
 import requests
-
+import datetime
 # from .data_storage.database import Database
 from data_storage.kafka import Kafka
 class ProductHunt():
@@ -21,21 +21,19 @@ class ProductHunt():
 
     def get_data(self):
         query = """
-        query {
-          posts(order: NEWEST, first: 40) {
-            edges {
-              node {
-
-                id
-                name
-                description
-                website
-               
-              }
-            }
-          }
-        }
-        """
+    query {{
+      posts(order: NEWEST, first: 100, postedBefore: "{}") {{
+        edges {{
+          node {{
+            id
+            name
+            description
+            website
+          }}
+        }}
+      }}
+    }}
+""".format(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'))
         data = self.fetch_data(query)
         products = data.get("data", {}).get("posts", {}).get("edges", [])
         

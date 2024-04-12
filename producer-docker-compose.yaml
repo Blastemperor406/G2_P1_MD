@@ -1,0 +1,38 @@
+services:
+    app-sumo:
+        image: app_sumo
+
+        networks:
+            - scrape-net
+
+    product-hunt:
+        image: product_hunt
+
+        networks:
+          - scrape-net
+        
+        environment:
+            PRODUCTHUNT_API: "cC_itI8AinMwOQE5zhcpbKWZq2syCxszY7RnndcR_yk"
+    
+    saas-worthy:
+        image: saas_worthy
+        
+        networks:
+          - scrape-net
+        
+    g2-consumer:
+        image: g2_consumer
+
+        networks:
+          - scrape-net
+        
+        environment:
+          OPENAI_API_KEY: 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
+          g2_token: 7623beff9ca1e3e0479ca27f225244c70fa017fed820b1bb733afa588a1549fb
+
+        depends_on: [app-sumo,saas-worthy, product-hunt]
+
+
+networks:
+  scrape-net:
+    external: true

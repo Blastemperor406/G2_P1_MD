@@ -9,7 +9,7 @@ import json
 
 
 def g2_call(name):
-    headers = {'Authorization': 'Token token='}
+    headers = {'Authorization': 'Token token='+os.environ.get("g2_token")}
     filters = {'filter[name]': name} 
     response = requests.get('https://data.g2.com/api/v1/products',headers=headers,params=filters)
     if response.status_code == 200:
@@ -42,7 +42,6 @@ def b2b_filter(pd):
 
 def g2_filter(d,function_call):
     print(function_call)
-    d=json.loads(d)
     name=d["Name"]
     if g2_call(name)==False:
         if b2b_filter(d["Description"])==True:

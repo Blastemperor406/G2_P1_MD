@@ -3,7 +3,7 @@ import uuid
 
 class Database:
 
-    def __init__(self,host:str="localhost",port:str="5432",user:str="root",passwd:str="password",dbname:str="Products") -> None:
+    def __init__(self,host:str="db",port:str="5432",user:str="root",passwd:str="password",dbname:str="Products") -> None:
         self.host=host
         self.port=port
         self.user=user

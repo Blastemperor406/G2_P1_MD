@@ -62,7 +62,8 @@ class SaasWorthy:
             
             async with session.get(self.url,params=self.params,headers=self.headers) as resp:
                 print(resp.status)
-                if resp.status==503:
+                if resp.status!=200:
+                    print(category)
                     return
                 data=await resp.json()                   
                 
@@ -71,6 +72,7 @@ class SaasWorthy:
                         await self.insert_data({"Website":j["vendorURL"].strip(),"Description":j["productDescription"].strip(),"Name":j["productName"].strip()})
                     except Exception as e:
                          print(e)
+                time.sleep(1)
                          
             
 if __name__=="__main__":
