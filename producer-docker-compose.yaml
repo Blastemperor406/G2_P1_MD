@@ -23,9 +23,6 @@ services:
 
         networks:
           - scrape-net
-        
-        
-
         depends_on: [app-sumo,saas-worthy, product-hunt]
 
 
