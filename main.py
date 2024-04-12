@@ -11,7 +11,7 @@ def create_cron_job(schedule, command):
 def main():
     print(f"{Fore.CYAN}Welcome to S.I.F.S!{Style.RESET_ALL}")
     schedule = input("Enter schedule (in crontab format, e.g., '0 0 * * *' for daily): ")
-    docker_compose_file = "producer-docker-compose.yaml"
+    docker_compose_file = os.path.join(os.getcwd()+"/producer-docker-compose.yaml")
     
 
     # Check if Docker Compose file exists
