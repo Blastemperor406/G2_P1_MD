@@ -39,3 +39,15 @@ def b2b_filter(pd):
         return True
     else:
         return False
+
+def g2_filter(d,function_call):
+    print(function_call)
+    d=json.loads(d)
+    name=d["Name"]
+    if g2_call(name)==False:
+        if b2b_filter(d["Description"])==True:
+            function_call(d)
+        else:
+            return 
+    else:
+        return
