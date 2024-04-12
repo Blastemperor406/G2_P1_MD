@@ -45,7 +45,8 @@ _**This whole architecture is dockerised and can be run on any system!!!**_
 - **Python Requests** and API libraries from python for working with various APIs (verifying the availibility of a product on G2) and scraping applications
 - **llama_index** to make a judgement on the product being B2B or not based on the description, announcements, posts, tweets or any unstructured data related to the product
 - **PostgresSQL** to store the final filtered items and eventually collect data from this.
-- Docker, DockerHub to containerise the whole cluster and services to ensure the product can be run on any Docker enabled platform.
+- **Docker, DockerHub** to containerise and create images for all the whole cluster and services to ensure the product can be run on any Docker enabled platform.
+- **Cron** to non interactively schedule the clusters periodic polling
 
 ## Advantages
 - Utilising **llama_index** to create a specific data source for each product, and judge it to be B2B or not. This will enable contemporary **product announcements on Twitter and LinkedIn to also be handled** if given their APIs to be successfully analysed and added to the database.
