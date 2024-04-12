@@ -11,9 +11,7 @@ services:
         networks:
           - scrape-net
         
-        environment:
-            PRODUCTHUNT_API: <insert ProductHunt API_KEY>
-    
+      
     saas-worthy:
         image: saas_worthy
         
@@ -26,9 +24,7 @@ services:
         networks:
           - scrape-net
         
-        environment:
-          OPENAI_API_KEY: <insert OPENAI_API_KEY>
-          g2_token: <insert g2 token>
+        
 
         depends_on: [app-sumo,saas-worthy, product-hunt]
 
