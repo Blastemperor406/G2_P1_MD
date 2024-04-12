@@ -4,8 +4,8 @@ from data_storage.kafka import Kafka
 import aiohttp
 import asyncio
 class AppSumo:
-    def __init__(self) -> None:
-        
+    def __init__(self,hosts:list=["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"]) -> None:
+        print(hosts)
         self.categories=["marketing-sales",
                          "operations",
                          "build-it-yourself",
@@ -27,7 +27,7 @@ class AppSumo:
                         "x-csrftoken": "TjDszSceH2FhnxT1dmJIuANZE3GqFlpqFi00hwSLHqRQeS0eYv3Gy6WgPPMj0hoU",
                     }
 
-        self.storage=Kafka(["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"])
+        self.storage=Kafka(hosts)
 
     async def start(self):
         await self.get_data()

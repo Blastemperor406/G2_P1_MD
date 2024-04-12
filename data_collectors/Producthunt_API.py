@@ -4,11 +4,11 @@ import requests
 from data_storage.kafka import Kafka
 class ProductHunt():
     
-    def __init__(self, api_key: str) -> None:
+    def __init__(self, api_key: str,hosts:list=["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"]) -> None:
         self.url="https://api.producthunt.com/v2/api/graphql"
         self.key=api_key
         # self.storage=Database()
-        self.storage=Kafka(["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"])
+        self.storage=Kafka(hosts)
         
     def fetch_data(self,query):
         

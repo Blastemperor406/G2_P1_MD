@@ -1,7 +1,7 @@
 from confluent_kafka import Consumer,KafkaError,KafkaException
 from data_storage.database import Database
 import sys
-
+import json
 
 
 class Kafka:
@@ -28,7 +28,7 @@ class Kafka:
                     elif msg.error():
                         raise KafkaException(msg.error())
                 else:
-                    callback(msg.value().decode())
+                    callback(json.loads(msg.value().decode()))
         finally:
             # Close down consumer to commit final offsets.
             self.consumer.close()

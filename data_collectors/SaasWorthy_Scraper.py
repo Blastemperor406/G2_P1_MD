@@ -6,7 +6,7 @@ import aiohttp
 # from data_storage.database import Database
 from data_storage.kafka import Kafka
 class SaasWorthy:
-    def __init__(self):
+    def __init__(self,hosts:list=["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"]):
         self.categories=[]
         
         self.url = "https://www.saasworthy.com/api/v1/guest/category/product/list"
@@ -25,7 +25,7 @@ class SaasWorthy:
         }
         
         # self.storage=Database()
-        self.storage=Kafka(["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"])
+        self.storage=Kafka(hosts)
 
     async def start(self):
          await self.get_categories()
@@ -62,15 +62,10 @@ class SaasWorthy:
             
             async with session.get(self.url,params=self.params,headers=self.headers) as resp:
                 print(resp.status)
-                if resp.status==200:
-                    try:
-                        data=await resp.json()                   
-                    except Exception as e:
-                         print(e,category)
-                         return
-                else:
-                     print(category,"could not get data")
-                     return
+                if resp.status==503:
+                    return
+                data=await resp.json()                   
+                
                 for j in data.get("products", []):
                     try:
                         await self.insert_data({"Website":j["vendorURL"].strip(),"Description":j["productDescription"].strip(),"Name":j["productName"].strip()})

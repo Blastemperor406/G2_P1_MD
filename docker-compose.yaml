@@ -6,12 +6,19 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVER_ID: 1
+    networks:
+        scrape-net:
+            ipv4_address: 172.14.0.7
     ports:
       - "2181:2181"
 
 
   kafka-1:
     image: confluentinc/cp-kafka:latest
+    networks:
+            scrape-net:
+                ipv4_address: 172.14.0.2
+
     ports:
       - "9092:9092"
       - "29092:29092"
@@ -26,6 +33,9 @@ services:
 
   kafka-2:
     image: confluentinc/cp-kafka:latest
+    networks:
+            scrape-net:
+              ipv4_address: 172.14.0.3
     ports:
       - "9093:9093"
       - "29093:29093"
@@ -40,6 +50,10 @@ services:
 
   kafka-3:
     image: confluentinc/cp-kafka:latest
+    networks:
+                scrape-net:
+                    ipv4_address: 172.14.0.4
+
     ports:
       - "9094:9094"
       - "29094:29094"
@@ -56,13 +70,17 @@ services:
   db: 
             image: postgres
             
+            networks:
+                scrape-net:
+                    ipv4_address: 172.14.0.5
+
 
             environment:
                 POSTGRES_USER: root
                 POSTGRES_DB: Products
                 POSTGRES_PASSWORD: password
             
-            ports: 
+            ports:
                 - 5432:5432
             
             depends_on: [kafka-1,kafka-2, kafka-3]
@@ -71,7 +89,10 @@ services:
   db-dashboard:
             
             image: dpage/pgadmin4
-            
+            networks:
+                scrape-net:
+                    ipv4_address: 172.14.0.6
+
 
             environment: 
                 PGADMIN_DEFAULT_EMAIL: monish72003@gmail.com
@@ -81,3 +102,12 @@ services:
                 - 5050:80 
             depends_on: 
                 - db
+  
+networks:
+    scrape-net:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+              - subnet: 172.14.0.0/16
+      
