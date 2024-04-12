@@ -12,7 +12,7 @@ services:
           - scrape-net
         
         environment:
-            PRODUCTHUNT_API: "cC_itI8AinMwOQE5zhcpbKWZq2syCxszY7RnndcR_yk"
+            PRODUCTHUNT_API: <insert ProductHunt API_KEY>
     
     saas-worthy:
         image: saas_worthy
@@ -27,8 +27,8 @@ services:
           - scrape-net
         
         environment:
-          OPENAI_API_KEY: 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
-          g2_token: 7623beff9ca1e3e0479ca27f225244c70fa017fed820b1bb733afa588a1549fb
+          OPENAI_API_KEY: <insert OPENAI_API_KEY>
+          g2_token: <insert g2 token>
 
         depends_on: [app-sumo,saas-worthy, product-hunt]
 
