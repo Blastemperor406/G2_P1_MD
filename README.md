@@ -21,9 +21,9 @@ We have developed an **Asynchronous** call based scraping architecture.
 ```mermaid
 graph TD;
   G{Kafka Broker cluster}
-  A[(Web data sources)] -->|Scraping Asynchronousy| C[Kafka producers];
-  B[(Web data sources)] -->|Scraping Asynchronousy| D[Kafka producers];
-  E[(Web data sources)] -->|Scraping Asynchronousy| F[Kafka producers];
+  A[(Web data sources)] -->|Scraping Asynchronously| C[Kafka producers];
+  B[(Web data sources)] -->|Scraping Asynchronously| D[Kafka producers];
+  E[(Web data sources)] -->|Scraping Asynchronously| F[Kafka producers];
   C --> G;
   D --> G;
   F --> G;
