@@ -2,7 +2,7 @@ import requests
 # from data_storage.database import Database
 from data_storage.kafka import Kafka
 import aiohttp
-
+import asyncio
 class AppSumo:
     def __init__(self) -> None:
         
@@ -31,8 +31,11 @@ class AppSumo:
 
     async def start(self):
         await self.get_data()
+
+
     async def insert_data(self,data):
          self.storage.insert_products(data)
+
 
     async def get_data(self) -> list:
         results = []
@@ -54,5 +57,4 @@ class AppSumo:
 
 if __name__=="__main__":
     collector=AppSumo()
-    result=collector.get_data()
-    collector.storage.insert_products(result)
+    asyncio.run(collector.start())

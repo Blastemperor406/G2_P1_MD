@@ -62,8 +62,15 @@ class SaasWorthy:
             
             async with session.get(self.url,params=self.params,headers=self.headers) as resp:
                 print(resp.status)
-                data=await resp.json()                   
-                
+                if resp.status==200:
+                    try:
+                        data=await resp.json()                   
+                    except Exception as e:
+                         print(e,category)
+                         return
+                else:
+                     print(category,"could not get data")
+                     return
                 for j in data.get("products", []):
                     try:
                         await self.insert_data({"Website":j["vendorURL"].strip(),"Description":j["productDescription"].strip(),"Name":j["productName"].strip()})

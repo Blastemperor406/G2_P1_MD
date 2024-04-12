@@ -4,11 +4,12 @@ import requests
 from data_storage.kafka import Kafka
 class ProductHunt():
     
-    def __init__(self, url: str, api_key: str) -> None:
-        self.url=url
+    def __init__(self, api_key: str) -> None:
+        self.url="https://api.producthunt.com/v2/api/graphql"
         self.key=api_key
         # self.storage=Database()
         self.storage=Kafka(["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"])
+        
     def fetch_data(self,query):
         
         headers = {
@@ -38,21 +39,21 @@ class ProductHunt():
         data = self.fetch_data(query)
         products = data.get("data", {}).get("posts", {}).get("edges", [])
         
-        product_list = []
+        
         for edge in products:
             product = edge.get("node", {})
-            product_list.append({
+            self.storage.insert_products({
                 "Name": product.get("name").strip(),
                 "Description": product.get("description").strip(),
                 "Website": product.get("website").strip(),
             })
         
-        return product_list
+        
     
 
 if __name__=="__main__":
     api=ProductHunt("https://api.producthunt.com/v2/api/graphql","cC_itI8AinMwOQE5zhcpbKWZq2syCxszY7RnndcR_yk")
     data=api.get_data()
     # api.storage.insert_products(data)
-    for i in data:
-        api.storage.insert_products({"Description":i["Description"],"Website":i["Website"],"Name":i["Name"]})
+    # for i in data:
+    #     api.storage.insert_products({"Description":i["Description"],"Website":i["Website"],"Name":i["Name"]})

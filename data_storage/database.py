@@ -57,7 +57,8 @@ class Database:
             self.conn.commit()
             cursor.close()    
 
-
+    def get_products(self):
+        pass
 if __name__=="__main__":
     print("Starting")
     database=Database()

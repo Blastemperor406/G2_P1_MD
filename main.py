@@ -15,11 +15,7 @@ def ph():
 
 def aps():
     aps=AppSumo()
-    data=aps.get_data()
-    for i in data:
-        print(i)
-        aps.storage.insert_products(i)
-
+    aps.start()
 def sw():
     sw=SaasWorthy()
     data=sw.get_data()
