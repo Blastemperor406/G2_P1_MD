@@ -52,3 +52,13 @@ def g2_filter(d,function_call):
             return 
     else:
         return
+    
+def name_description_extractor(data):
+    documents = StringIterableReader().load_data(
+    texts=data
+    )
+    index = TreeIndex.from_documents(documents)
+    query_engine = index.as_query_engine()
+    a=query_engine.query("What is the product's name?")
+    b=query_engine.query("What is the product's description?")
+    return {"Name":a.response,"Description":b.response}
