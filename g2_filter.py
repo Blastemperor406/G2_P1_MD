@@ -9,7 +9,7 @@ import json
 
 
 def g2_call(name):
-    headers = {'Authorization': 'Token token='}
+    headers = {'Authorization': 'Token token='+os.getenv('g2_token')}
     filters = {'filter[name]': name} 
     response = requests.get('https://data.g2.com/api/v1/products',headers=headers,params=filters)
     if response.status_code == 200:
@@ -51,3 +51,13 @@ def g2_filter(d,function_call):
             return 
     else:
         return
+    
+def name_description_extractor(data):
+    documents = StringIterableReader().load_data(
+    texts=data
+    )
+    index = TreeIndex.from_documents(documents)
+    query_engine = index.as_query_engine()
+    a=query_engine.query("What is the product's name?")
+    b=query_engine.query("What is the product's description?")
+    return {"Name":a.response,"Description":b.response}
