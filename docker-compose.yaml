@@ -1,3 +1,117 @@
+# version: '3.7'
+
+# services:
+#   zookeeper:
+#     image: confluentinc/cp-zookeeper:latest
+#     environment:
+#       ZOOKEEPER_CLIENT_PORT: 2181
+#       ZOOKEEPER_SERVER_ID: 1
+#     networks:
+#         scrape-net:
+#             ipv4_address: 172.14.0.7
+#     ports:
+#       - "2181:2181"
+
+
+#   kafka-1:
+#     image: confluentinc/cp-kafka:latest
+#     networks:
+#             scrape-net:
+#                 ipv4_address: 172.14.0.2
+
+#     ports:
+#       - "9092:9092"
+#       - "29092:29092"
+#     environment:
+#       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://host.docker.internal:29092
+#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+#       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+#       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+#       KAFKA_BROKER_ID: 1
+#     depends_on:
+#       - zookeeper
+
+#   kafka-2:
+#     image: confluentinc/cp-kafka:latest
+#     networks:
+#             scrape-net:
+#               ipv4_address: 172.14.0.3
+#     ports:
+#       - "9093:9093"
+#       - "29093:29093"
+#     environment:
+#       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-2:19093,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093,DOCKER://host.docker.internal:29093
+#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+#       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+#       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+#       KAFKA_BROKER_ID: 2
+#     depends_on:
+#       - zookeeper
+
+#   kafka-3:
+#     image: confluentinc/cp-kafka:latest
+#     networks:
+#                 scrape-net:
+#                     ipv4_address: 172.14.0.4
+
+#     ports:
+#       - "9094:9094"
+#       - "29094:29094"
+#     environment:
+#       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-3:19094,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9094,DOCKER://host.docker.internal:29094
+#       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
+#       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+#       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+#       KAFKA_BROKER_ID: 3
+#     depends_on:
+#       - zookeeper
+
+
+#   db: 
+#             image: postgres
+            
+#             networks:
+#                 scrape-net:
+#                     ipv4_address: 172.14.0.5
+
+
+#             environment:
+#                 POSTGRES_USER: root
+#                 POSTGRES_DB: Products
+#                 POSTGRES_PASSWORD: password
+            
+#             ports:
+#                 - 5432:5432
+            
+#             depends_on: [kafka-1,kafka-2, kafka-3]
+
+
+#   db-dashboard:
+            
+#             image: dpage/pgadmin4
+#             networks:
+#                 scrape-net:
+#                     ipv4_address: 172.14.0.6
+
+
+#             environment: 
+#                 PGADMIN_DEFAULT_EMAIL: monish72003@gmail.com
+#                 PGADMIN_DEFAULT_PASSWORD: password
+
+#             ports: 
+#                 - 5050:80 
+#             depends_on: 
+#                 - db
+  
+# networks:
+#     scrape-net:
+#         name: scrape-net
+#         driver: bridge
+#         ipam:
+#             driver: default
+#             config:
+#               - subnet: 172.14.0.0/16
+      
 version: '3.7'
 
 services:
@@ -6,12 +120,19 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVER_ID: 1
+    networks:
+      scrape-net:
+        ipv4_address: 172.14.0.7
     ports:
       - "2181:2181"
-
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
 
   kafka-1:
     image: confluentinc/cp-kafka:latest
+    networks:
+      scrape-net:
+        ipv4_address: 172.14.0.2
     ports:
       - "9092:9092"
       - "29092:29092"
@@ -23,9 +144,14 @@ services:
       KAFKA_BROKER_ID: 1
     depends_on:
       - zookeeper
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
 
   kafka-2:
     image: confluentinc/cp-kafka:latest
+    networks:
+      scrape-net:
+        ipv4_address: 172.14.0.3
     ports:
       - "9093:9093"
       - "29093:29093"
@@ -37,9 +163,14 @@ services:
       KAFKA_BROKER_ID: 2
     depends_on:
       - zookeeper
+    volumes:
+      - kafka2_data:/var/lib/kafka/data
 
   kafka-3:
     image: confluentinc/cp-kafka:latest
+    networks:
+      scrape-net:
+        ipv4_address: 172.14.0.4
     ports:
       - "9094:9094"
       - "29094:29094"
@@ -51,33 +182,55 @@ services:
       KAFKA_BROKER_ID: 3
     depends_on:
       - zookeeper
-
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
 
   db: 
-            image: postgres
-            
-
-            environment:
-                POSTGRES_USER: root
-                POSTGRES_DB: Products
-                POSTGRES_PASSWORD: password
-            
-            ports: 
-                - 5432:5432
-            
-            depends_on: [kafka-1,kafka-2, kafka-3]
-
+    image: postgres
+    networks:
+      scrape-net:
+        ipv4_address: 172.14.0.5
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: Products
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+    depends_on: 
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
   db-dashboard:
-            
-            image: dpage/pgadmin4
-            
+    image: dpage/pgadmin4
+    networks:
+      scrape-net:
+        ipv4_address: 172.14.0.6
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: monish72003@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports: 
+      - 5050:80 
+    depends_on: 
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
-            environment: 
-                PGADMIN_DEFAULT_EMAIL: monish72003@gmail.com
-                PGADMIN_DEFAULT_PASSWORD: password
+networks:
+  scrape-net:
+    name: scrape-net
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.14.0.0/16
 
-            ports: 
-                - 5050:80 
-            depends_on: 
-                - db
+volumes:
+  zookeeper_data:
+  kafka1_data:
+  kafka2_data:
+  kafka3_data:
+  db_data:
+  pgadmin_data:

@@ -1,0 +1,38 @@
+services:
+    app-sumo:
+        image: app_sumo
+
+        networks:
+            - scrape-net
+
+    product-hunt:
+        image: product_hunt
+
+        networks:
+          - scrape-net
+        
+        environment:
+            PRODUCTHUNT_API: <Insert Producthunt API Key>
+    
+    saas-worthy:
+        image: saas_worthy
+        
+        networks:
+          - scrape-net
+        
+    g2-consumer:
+        image: g2_consumer
+
+        networks:
+          - scrape-net
+        
+        environment:
+          OPENAI_API_KEY: <Insert OPENAI_API_KEY>
+          g2_token: <Insert Key here>
+
+        depends_on: [app-sumo,saas-worthy, product-hunt]
+
+
+networks:
+  scrape-net:
+    external: true

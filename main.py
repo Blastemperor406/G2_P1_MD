@@ -1,48 +1,26 @@
-import time
-from data_collectors.Producthunt_API import ProductHunt
-from data_collectors.AppSumo_Scraper import AppSumo
-from data_collectors.SaasWorthy_Scraper import SaasWorthy
+import os
+import sys
+import subprocess
+from colorama import Fore, Style
 
-import multiprocessing
+def create_cron_job(schedule, command):
+    cron_command = f'(crontab -l ; echo "{schedule} {command}") | crontab -'
+    subprocess.call(cron_command, shell=True)
+    print(f"{Fore.GREEN}Cron job created successfully!{Style.RESET_ALL}")
 
+def main():
+    print(f"{Fore.CYAN}Welcome to S.I.F.S!{Style.RESET_ALL}")
+    schedule = input("Enter schedule (in crontab format, e.g., '0 0 * * *' for daily): ")
+    docker_compose_file = os.path.join(os.getcwd()+"/producer-docker-compose.yaml")
+    
 
+    # Check if Docker Compose file exists
+    if not os.path.exists(docker_compose_file):
+        print(f"{Fore.RED}Error: Docker Compose file not found!{Style.RESET_ALL}")
+        sys.exit(1)
 
-def ph():
-    ph=ProductHunt("https://api.producthunt.com/v2/api/graphql","cC_itI8AinMwOQE5zhcpbKWZq2syCxszY7RnndcR_yk")
-    data=ph.get_data()
-    for i in data:
-        ph.storage.insert_products(i)
-
-def aps():
-    aps=AppSumo()
-    data=aps.get_data()
-    for i in data:
-        print(i)
-        aps.storage.insert_products(i)
-
-def sw():
-    sw=SaasWorthy()
-    data=sw.get_data()
-    for i in data:
-        sw.storage.insert_products(data)
-
+    command = f"docker-compose -f {docker_compose_file} up -d"
+    create_cron_job(schedule, command)
 
 if __name__ == "__main__":
-    time.sleep(5)
-    # Create processes for each function
-    process1 = multiprocessing.Process(target=aps)
-    process2 = multiprocessing.Process(target=sw)
-    process3 = multiprocessing.Process(target=ph)
-
-    # Start the processes
-    process1.start()
-    process2.start()
-    
-
-    # Wait for both processes to finish
-    process1.join()
-    process2.join()
-    
-
-
-    
+    main()

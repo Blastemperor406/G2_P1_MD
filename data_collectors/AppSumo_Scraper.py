@@ -2,10 +2,10 @@ import requests
 # from data_storage.database import Database
 from data_storage.kafka import Kafka
 import aiohttp
-
+import asyncio
 class AppSumo:
-    def __init__(self) -> None:
-        
+    def __init__(self,hosts:list=["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"]) -> None:
+        print(hosts)
         self.categories=["marketing-sales",
                          "operations",
                          "build-it-yourself",
@@ -27,12 +27,15 @@ class AppSumo:
                         "x-csrftoken": "TjDszSceH2FhnxT1dmJIuANZE3GqFlpqFi00hwSLHqRQeS0eYv3Gy6WgPPMj0hoU",
                     }
 
-        self.storage=Kafka(["0.0.0.0:9093","0.0.0.0:9092","0.0.0.0:9094"])
+        self.storage=Kafka(hosts)
 
     async def start(self):
         await self.get_data()
+
+
     async def insert_data(self,data):
          self.storage.insert_products(data)
+
 
     async def get_data(self) -> list:
         results = []
@@ -54,5 +57,4 @@ class AppSumo:
 
 if __name__=="__main__":
     collector=AppSumo()
-    result=collector.get_data()
-    collector.storage.insert_products(result)
+    asyncio.run(collector.start())
