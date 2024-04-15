@@ -8,6 +8,7 @@ import g2_filter
 
 def add_data(value):
     try:
+        print(value)
         database.insert_products(value)
     except Exception as e:
         print(e)
