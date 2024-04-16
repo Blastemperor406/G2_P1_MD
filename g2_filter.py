@@ -33,7 +33,7 @@ def b2b_filter(pd):
     )
     index = TreeIndex.from_documents(documents)
     query_engine = index.as_query_engine()
-    a=query_engine.query("Is this a 'Business to Business' or a 'B2B' product? Words like 'business','Sellers' and 'CRM' are indicative of B2B product .Answer as 'True' or 'False'")
+    a=query_engine.query("Is this a 'Business to Business' or a 'B2B' software product? Words like 'business','Sellers' and 'CRM' are indicative of B2B product .Answer as 'True' or 'False'")
     #b=query_engine.query("What is the product's name?")
     if a.response=='True':
         return True
