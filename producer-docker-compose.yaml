@@ -1,34 +1,51 @@
+version: '3'
 services:
+
     app-sumo:
+        build: 
+          context: .
+          target: App_Sumo
+          
         image: app_sumo
 
         networks:
             - scrape-net
 
     product-hunt:
+        build: 
+          context: .
+          target: Product_Hunt
+
         image: product_hunt
 
         networks:
           - scrape-net
         
         environment:
-            PRODUCTHUNT_API: <Insert Producthunt API Key>
+            PRODUCTHUNT_API: <insert Product_Hunt_API_KEY>
     
     saas-worthy:
+        build: 
+          context: .
+          target: SaaS_Worthy
+
         image: saas_worthy
         
         networks:
           - scrape-net
         
     g2-consumer:
+        build:
+          context: .
+          target: Consumer
         image: g2_consumer
 
         networks:
           - scrape-net
         
         environment:
-          OPENAI_API_KEY: <Insert OPENAI_API_KEY>
-          g2_token: <Insert Key here>
+          OPENAI_API_KEY: <insert OPENAI_API_KEY>
+          g2_token: <insert g2_API_KEY>
 
         depends_on: [app-sumo,saas-worthy, product-hunt]
 

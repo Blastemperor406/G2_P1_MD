@@ -9,6 +9,7 @@ import json
 
 
 def g2_call(name):
+    print(name)
     headers = {'Authorization': 'Token token='+os.environ.get("g2_token")}
     filters = {'filter[name]': name} 
     response = requests.get('https://data.g2.com/api/v1/products',headers=headers,params=filters)
@@ -28,6 +29,7 @@ def g2_call(name):
         return False
 
 def b2b_filter(pd):
+    print(pd)
     documents = StringIterableReader().load_data(
     texts=pd
     )
